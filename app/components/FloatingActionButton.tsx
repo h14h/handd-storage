@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { PlusIcon, XIcon } from "./Icons";
+
+const font = '"JetBrains Mono", "Courier New", monospace';
 
 interface FloatingActionButtonProps {
   onClick: () => void;
-  isExpanded?: boolean;
 }
 
-export function FloatingActionButton({
-  onClick,
-  isExpanded = false,
-}: FloatingActionButtonProps) {
+export function FloatingActionButton({ onClick }: FloatingActionButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <button
@@ -20,15 +18,43 @@ export function FloatingActionButton({
       onClick={onClick}
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
-      onMouseLeave={() => setIsPressed(false)}
-      className="fixed bottom-20 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg shadow-zinc-900/30 transition-all duration-200 hover:bg-zinc-800 active:scale-95 active:bg-zinc-700 sm:right-6"
+      onMouseLeave={() => {
+        setIsPressed(false);
+        setIsHovered(false);
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      style={{
+        position: "fixed",
+        bottom: "5rem",
+        right: "1rem",
+        zIndex: 50,
+        width: "56px",
+        height: "56px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: isHovered ? "#000" : "#FFE500",
+        color: isHovered ? "#FFE500" : "#000",
+        border: "3px solid #000",
+        cursor: "pointer",
+        fontFamily: font,
+        borderRadius: 0,
+        boxShadow: isPressed ? "none" : "4px 4px 0px #000",
+        transform: isPressed ? "translate(4px, 4px)" : "translate(0, 0)",
+        transition: "all 100ms",
+      }}
     >
-      <PlusIcon
-        size={24}
-        className={`transition-transform duration-200 ${
-          isPressed ? "rotate-45" : ""
-        }`}
-      />
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={3}
+      >
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
     </button>
   );
 }

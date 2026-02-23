@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
-import { PlusIcon } from "./Icons";
+
+const font = '"JetBrains Mono", "Courier New", monospace';
 
 interface ItemFormProps {
   item?: Doc<"items"> | null;
@@ -31,6 +32,30 @@ const PRESET_CATEGORIES = [
   "Seasonal",
 ];
 
+const labelStyle: React.CSSProperties = {
+  fontSize: "0.625rem",
+  fontWeight: 700,
+  letterSpacing: "0.15em",
+  textTransform: "uppercase",
+  color: "#000",
+  fontFamily: font,
+  marginBottom: "0.5rem",
+  display: "block",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  border: "3px solid #000",
+  backgroundColor: "#FFF",
+  color: "#000",
+  padding: "0.75rem",
+  fontSize: "0.875rem",
+  fontFamily: font,
+  borderRadius: 0,
+  outline: "none",
+  boxSizing: "border-box",
+};
+
 export function ItemForm({
   item,
   onSave,
@@ -54,69 +79,137 @@ export function ItemForm({
       name: name.trim(),
       description: description.trim() || undefined,
       quantity,
-      category: showCustomCategory ? customCategory.trim() : category || undefined,
+      category: showCustomCategory
+        ? customCategory.trim()
+        : category || undefined,
       notes: notes.trim() || undefined,
       isFragile,
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}
+    >
       {/* Name */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="item-name" className="text-sm font-medium text-zinc-700">
-          Name *
+      <div>
+        <label htmlFor="item-name" style={labelStyle}>
+          NAME *
         </label>
         <input
           id="item-name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="What are you storing?"
-          className="rounded-xl border border-zinc-200 px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-100"
+          placeholder="ITEM DESIGNATION"
+          style={inputStyle}
         />
       </div>
 
       {/* Description */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="item-description" className="text-sm font-medium text-zinc-700">
-          Description
+      <div>
+        <label htmlFor="item-description" style={labelStyle}>
+          DESCRIPTION
         </label>
         <input
           id="item-description"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brief description (optional)"
-          className="rounded-xl border border-zinc-200 px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-100"
+          placeholder="BRIEF DESCRIPTION (OPTIONAL)"
+          style={inputStyle}
         />
       </div>
 
       {/* Quantity */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="item-quantity" className="text-sm font-medium text-zinc-700">
-          Quantity
+      <div>
+        <label htmlFor="item-quantity" style={labelStyle}>
+          QUANTITY
         </label>
-        <div className="flex items-center gap-3">
+        <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
           <button
             type="button"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-200 text-xl font-medium text-zinc-600 transition-colors hover:bg-zinc-50 active:bg-zinc-100"
+            style={{
+              width: "48px",
+              height: "48px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#000",
+              color: "#FFF",
+              border: "3px solid #000",
+              fontSize: "1.25rem",
+              fontWeight: 800,
+              fontFamily: font,
+              cursor: "pointer",
+              borderRadius: 0,
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#FFE500";
+              e.currentTarget.style.color = "#000";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#000";
+              e.currentTarget.style.color = "#FFF";
+            }}
           >
-            −
+            -
           </button>
           <input
             id="item-quantity"
             type="number"
             min={1}
             value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-            className="h-12 w-20 rounded-xl border border-zinc-200 bg-zinc-50 text-center text-lg font-semibold focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-100"
+            onChange={(e) =>
+              setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+            }
+            style={{
+              width: "80px",
+              height: "48px",
+              border: "3px solid #000",
+              borderLeft: "none",
+              borderRight: "none",
+              backgroundColor: "#FFF",
+              textAlign: "center",
+              fontSize: "1.125rem",
+              fontWeight: 800,
+              fontFamily: font,
+              color: "#000",
+              borderRadius: 0,
+              outline: "none",
+              boxSizing: "border-box",
+            }}
           />
           <button
             type="button"
             onClick={() => setQuantity(quantity + 1)}
-            className="flex h-12 w-12 items-center justify-center rounded-xl border border-zinc-200 text-xl font-medium text-zinc-600 transition-colors hover:bg-zinc-50 active:bg-zinc-100"
+            style={{
+              width: "48px",
+              height: "48px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#000",
+              color: "#FFF",
+              border: "3px solid #000",
+              fontSize: "1.25rem",
+              fontWeight: 800,
+              fontFamily: font,
+              cursor: "pointer",
+              borderRadius: 0,
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#FFE500";
+              e.currentTarget.style.color = "#000";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#000";
+              e.currentTarget.style.color = "#FFF";
+            }}
           >
             +
           </button>
@@ -124,9 +217,11 @@ export function ItemForm({
       </div>
 
       {/* Category */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-zinc-700">Category</label>
-        <div className="flex flex-wrap gap-2">
+      <div>
+        <label style={labelStyle}>CATEGORY</label>
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}
+        >
           {PRESET_CATEGORIES.slice(0, 6).map((cat) => (
             <button
               key={cat}
@@ -135,11 +230,32 @@ export function ItemForm({
                 setCategory(cat);
                 setShowCustomCategory(false);
               }}
-              className={`rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
-                category === cat && !showCustomCategory
-                  ? "border-zinc-900 bg-zinc-900 text-white"
-                  : "border-zinc-200 text-zinc-600 hover:border-zinc-300"
-              }`}
+              style={{
+                padding: "0.5rem 0.75rem",
+                fontSize: "0.625rem",
+                fontWeight: 700,
+                fontFamily: font,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 0,
+                border: "3px solid #000",
+                backgroundColor:
+                  category === cat && !showCustomCategory ? "#000" : "#FFF",
+                color:
+                  category === cat && !showCustomCategory ? "#FFF" : "#000",
+                transition: "all 100ms",
+              }}
+              onMouseEnter={(e) => {
+                if (!(category === cat && !showCustomCategory)) {
+                  e.currentTarget.style.backgroundColor = "#FFE500";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!(category === cat && !showCustomCategory)) {
+                  e.currentTarget.style.backgroundColor = "#FFF";
+                }
+              }}
             >
               {cat}
             </button>
@@ -147,13 +263,32 @@ export function ItemForm({
           <button
             type="button"
             onClick={() => setShowCustomCategory(!showCustomCategory)}
-            className={`rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
-              showCustomCategory
-                ? "border-zinc-900 bg-zinc-900 text-white"
-                : "border-zinc-200 text-zinc-600 hover:border-zinc-300"
-            }`}
+            style={{
+              padding: "0.5rem 0.75rem",
+              fontSize: "0.625rem",
+              fontWeight: 700,
+              fontFamily: font,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              borderRadius: 0,
+              border: "3px solid #000",
+              backgroundColor: showCustomCategory ? "#000" : "#FFF",
+              color: showCustomCategory ? "#FFF" : "#000",
+              transition: "all 100ms",
+            }}
+            onMouseEnter={(e) => {
+              if (!showCustomCategory) {
+                e.currentTarget.style.backgroundColor = "#FFE500";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!showCustomCategory) {
+                e.currentTarget.style.backgroundColor = "#FFF";
+              }
+            }}
           >
-            Other
+            OTHER
           </button>
         </div>
         {showCustomCategory && (
@@ -162,8 +297,8 @@ export function ItemForm({
             type="text"
             value={customCategory}
             onChange={(e) => setCustomCategory(e.target.value)}
-            placeholder="Enter custom category"
-            className="mt-2 rounded-xl border border-zinc-200 px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-100"
+            placeholder="CUSTOM CATEGORY"
+            style={{ ...inputStyle, marginTop: "0.5rem" }}
           />
         )}
       </div>
@@ -173,60 +308,125 @@ export function ItemForm({
         <button
           type="button"
           onClick={() => setIsFragile(!isFragile)}
-          className={`flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-all ${
-            isFragile
-              ? "border-orange-300 bg-orange-50 text-orange-600"
-              : "border-zinc-200 text-zinc-600 hover:border-zinc-300"
-          }`}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
+            padding: "0.75rem",
+            fontSize: "0.75rem",
+            fontWeight: 800,
+            fontFamily: font,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            borderRadius: 0,
+            border: "3px solid #000",
+            backgroundColor: isFragile ? "#FFE500" : "#FFF",
+            color: "#000",
+            transition: "all 100ms",
+          }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
             <line x1="12" y1="9" x2="12" y2="13" />
             <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
-          Fragile
+          {isFragile ? "!! FRAGILE !!" : "FRAGILE"}
         </button>
       </div>
 
       {/* Notes */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="item-notes" className="text-sm font-medium text-zinc-700">
-          Notes
+      <div>
+        <label htmlFor="item-notes" style={labelStyle}>
+          NOTES
         </label>
         <textarea
           id="item-notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Any additional notes..."
+          placeholder="ADDITIONAL NOTES..."
           rows={3}
-          className="resize-none rounded-xl border border-zinc-200 px-4 py-3 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-100"
+          style={{
+            ...inputStyle,
+            resize: "none",
+          }}
         />
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3 pt-2">
+      <div style={{ display: "flex", gap: 0, paddingTop: "0.5rem" }}>
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 rounded-xl border border-zinc-200 py-3.5 text-base font-medium text-zinc-600 transition-colors hover:bg-zinc-50 active:bg-zinc-100"
+          style={{
+            flex: 1,
+            padding: "1rem",
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            fontFamily: font,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            borderRadius: 0,
+            border: "3px solid #000",
+            backgroundColor: "#FFF",
+            color: "#000",
+            transition: "all 100ms",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#000";
+            e.currentTarget.style.color = "#FFF";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#FFF";
+            e.currentTarget.style.color = "#000";
+          }}
         >
-          Cancel
+          CANCEL
         </button>
         <button
           type="submit"
           disabled={!name.trim() || isLoading}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-zinc-900 py-3.5 text-base font-medium text-white transition-all hover:bg-zinc-800 active:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            flex: 1,
+            padding: "1rem",
+            fontSize: "0.75rem",
+            fontWeight: 700,
+            fontFamily: font,
+            letterSpacing: "0.15em",
+            textTransform: "uppercase",
+            cursor: !name.trim() || isLoading ? "not-allowed" : "pointer",
+            borderRadius: 0,
+            border: "3px solid #000",
+            borderLeft: "none",
+            backgroundColor: !name.trim() || isLoading ? "#ccc" : "#000",
+            color: !name.trim() || isLoading ? "#666" : "#FFF",
+            transition: "all 100ms",
+            opacity: !name.trim() || isLoading ? 0.5 : 1,
+          }}
+          onMouseEnter={(e) => {
+            if (name.trim() && !isLoading) {
+              e.currentTarget.style.backgroundColor = "#FFE500";
+              e.currentTarget.style.color = "#000";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (name.trim() && !isLoading) {
+              e.currentTarget.style.backgroundColor = "#000";
+              e.currentTarget.style.color = "#FFF";
+            }
+          }}
         >
-          {isLoading ? (
-            <span className="animate-pulse">Saving...</span>
-          ) : item ? (
-            "Update Item"
-          ) : (
-            <>
-              <PlusIcon size={18} />
-              Add Item
-            </>
-          )}
+          {isLoading ? "SAVING..." : item ? "UPDATE" : "+ ADD ITEM"}
         </button>
       </div>
     </form>

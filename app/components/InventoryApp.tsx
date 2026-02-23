@@ -9,7 +9,8 @@ import { SearchBar } from "./SearchBar";
 import { ItemCard } from "./ItemCard";
 import { AddItemModal } from "./AddItemModal";
 import { FloatingActionButton } from "./FloatingActionButton";
-import { PackageIcon, PlusIcon } from "./Icons";
+
+const font = '"JetBrains Mono", "Courier New", monospace';
 
 export function InventoryApp() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -63,26 +64,65 @@ export function InventoryApp() {
   };
 
   const handleDeleteItem = async (id: Id<"items">) => {
-    if (confirm("Are you sure you want to delete this item?")) {
+    if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS ITEM?")) {
       await deleteItem({ id });
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div
+      style={{
+        fontFamily: font,
+        minHeight: "100vh",
+        backgroundColor: "#FFF",
+        color: "#000",
+      }}
+    >
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-lg px-4 py-4">
-          <div className="flex items-center justify-between">
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 30,
+          borderBottom: "3px solid #000",
+          backgroundColor: "#FFF",
+        }}
+      >
+        <div style={{ maxWidth: "640px", margin: "0 auto", padding: "0 1rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "1rem 0",
+            }}
+          >
             <div>
-              <h1 className="text-xl font-semibold tracking-tight text-zinc-900">
-                Storage Locker
+              <h1
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: 800,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  margin: 0,
+                  fontFamily: font,
+                }}
+              >
+                STORAGE LOCKER
               </h1>
-              <p className="text-sm text-zinc-500">
-                {allItems?.length ?? 0} items
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  margin: "0.25rem 0 0 0",
+                  fontFamily: font,
+                }}
+              >
+                [{allItems?.length ?? 0}] ITEMS INDEXED
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <UserButton />
               <button
                 type="button"
@@ -90,30 +130,111 @@ export function InventoryApp() {
                   setEditingItem(null);
                   setIsItemModalOpen(true);
                 }}
-                className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 active:bg-zinc-700"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  backgroundColor: "#000",
+                  color: "#FFF",
+                  border: "3px solid #000",
+                  padding: "0.5rem 1rem",
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  fontFamily: font,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  borderRadius: 0,
+                  transition: "all 100ms",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#FFE500";
+                  e.currentTarget.style.color = "#000";
+                  e.currentTarget.style.borderColor = "#000";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#000";
+                  e.currentTarget.style.color = "#FFF";
+                  e.currentTarget.style.borderColor = "#000";
+                }}
               >
-                <PlusIcon size={16} />
-                <span className="hidden sm:inline">New Item</span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                <span style={{ display: "none" }} className="sm-show">
+                  NEW
+                </span>
               </button>
             </div>
           </div>
 
           {/* Search */}
-          <div className="mt-4">
+          <div style={{ paddingBottom: "1rem" }}>
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search items..."
+              placeholder="SEARCH INVENTORY..."
             />
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-lg px-4 py-4 pb-28">
+      <main
+        style={{
+          maxWidth: "640px",
+          margin: "0 auto",
+          padding: "0 1rem 7rem 1rem",
+        }}
+      >
+        {/* Table header */}
+        {displayItems.length > 0 && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "60px 1fr 100px 80px",
+              borderLeft: "3px solid #000",
+              borderRight: "3px solid #000",
+              borderTop: "3px solid #000",
+              backgroundColor: "#000",
+              color: "#FFF",
+              fontSize: "0.625rem",
+              fontWeight: 700,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              fontFamily: font,
+            }}
+          >
+            <div style={{ padding: "0.5rem", borderRight: "1px solid #FFF" }}>
+              QTY
+            </div>
+            <div style={{ padding: "0.5rem", borderRight: "1px solid #FFF" }}>
+              ITEM
+            </div>
+            <div style={{ padding: "0.5rem", borderRight: "1px solid #FFF" }}>
+              CATEGORY
+            </div>
+            <div style={{ padding: "0.5rem" }}>STATUS</div>
+          </div>
+        )}
+
         {/* Items list */}
         {displayItems.length > 0 ? (
-          <div className="flex flex-col gap-3">
+          <div
+            style={{
+              borderLeft: "3px solid #000",
+              borderRight: "3px solid #000",
+              borderBottom: "3px solid #000",
+            }}
+          >
             {displayItems.map((item) => (
               <ItemCard
                 key={item._id}
@@ -125,20 +246,44 @@ export function InventoryApp() {
           </div>
         ) : (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100">
-              <PackageIcon size={28} className="text-zinc-400" />
+          <div
+            style={{
+              border: "3px solid #000",
+              padding: "4rem 2rem",
+              textAlign: "center",
+              marginTop: "1rem",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "3rem",
+                fontWeight: 800,
+                letterSpacing: "0.15em",
+                lineHeight: 1,
+              }}
+            >
+              {searchQuery ? "NULL" : "EMPTY"}
             </div>
-            <div>
-              <h3 className="text-base font-medium text-zinc-900">
-                {searchQuery ? "No items found" : "No items yet"}
-              </h3>
-              <p className="mt-1 text-sm text-zinc-500">
-                {searchQuery
-                  ? "Try a different search term"
-                  : "Tap the + button to add your first item"}
-              </p>
-            </div>
+            <div
+              style={{
+                width: "60px",
+                height: "3px",
+                backgroundColor: "#FFE500",
+                margin: "1rem auto",
+              }}
+            />
+            <p
+              style={{
+                fontSize: "0.75rem",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                fontFamily: font,
+              }}
+            >
+              {searchQuery
+                ? "NO MATCHING RECORDS FOUND"
+                : "NO ITEMS CATALOGUED // TAP [+] TO BEGIN"}
+            </p>
           </div>
         )}
       </main>

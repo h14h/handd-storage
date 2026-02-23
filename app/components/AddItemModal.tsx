@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Doc } from "@/convex/_generated/dataModel";
 import { ItemForm } from "./ItemForm";
-import { XIcon } from "./Icons";
+
+const font = '"JetBrains Mono", "Courier New", monospace';
 
 interface AddItemModalProps {
   isOpen: boolean;
@@ -54,46 +55,117 @@ export function AddItemModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+        fontFamily: font,
+      }}
+    >
       {/* Backdrop */}
       <button
         type="button"
-        className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
-          showContent ? "opacity-100" : "opacity-0"
-        }`}
         onClick={onClose}
         aria-label="Close modal"
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.85)",
+          border: "none",
+          cursor: "pointer",
+          opacity: showContent ? 1 : 0,
+          transition: "opacity 100ms",
+        }}
       />
 
       {/* Modal */}
       <div
-        className={`relative w-full max-w-lg rounded-t-3xl bg-white shadow-2xl transition-all duration-300 sm:rounded-3xl ${
-          showContent
-            ? "translate-y-0 opacity-100"
-            : "translate-y-8 opacity-0"
-        }`}
+        style={{
+          position: "relative",
+          width: "100%",
+          maxWidth: "640px",
+          backgroundColor: "#FFF",
+          border: "3px solid #000",
+          borderBottom: "none",
+          transform: showContent ? "translateY(0)" : "translateY(100%)",
+          opacity: showContent ? 1 : 0,
+          transition: "transform 100ms, opacity 100ms",
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 0,
+        }}
       >
-        {/* Handle bar for mobile */}
-        <div className="flex justify-center pt-3 sm:hidden">
-          <div className="h-1 w-10 rounded-full bg-zinc-300" />
-        </div>
-
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-100 px-6 py-4">
-          <h2 className="text-lg font-semibold text-zinc-900">
-            {item ? "Edit Item" : "Add New Item"}
+        {/* Yellow header bar */}
+        <div
+          style={{
+            backgroundColor: "#FFE500",
+            borderBottom: "3px solid #000",
+            padding: "1rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 800,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              margin: 0,
+              color: "#000",
+              fontFamily: font,
+            }}
+          >
+            {item ? "// EDIT ITEM" : "// NEW ITEM"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
+            style={{
+              backgroundColor: "#000",
+              color: "#FFF",
+              border: "none",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              fontFamily: font,
+              fontWeight: 800,
+              fontSize: "1rem",
+              borderRadius: 0,
+            }}
           >
-            <XIcon size={20} />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={3}
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
           </button>
         </div>
 
         {/* Form */}
-        <div className="max-h-[70vh] overflow-y-auto px-6 py-6">
+        <div
+          style={{
+            overflowY: "auto",
+            padding: "1.5rem",
+            flex: 1,
+          }}
+        >
           <ItemForm
             item={item}
             onSave={onSave}

@@ -3,6 +3,8 @@
 import { useState, useRef } from "react";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 
+const font = '"JetBrains Mono", "Courier New", monospace';
+
 interface ItemCardProps {
   item: Doc<"items">;
   onEdit: (item: Doc<"items">) => void;
@@ -13,6 +15,7 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
   const [showActions, setShowActions] = useState(false);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const startX = useRef(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -40,11 +43,20 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl">
+    <div style={{ position: "relative", overflow: "hidden" }}>
       {/* Action buttons behind the card */}
       <div
-        className="absolute right-0 top-0 flex h-full items-center gap-1 px-2 transition-opacity"
-        style={{ opacity: showActions ? 1 : 0 }}
+        style={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          gap: 0,
+          opacity: showActions ? 1 : 0,
+          transition: "opacity 100ms",
+        }}
       >
         <button
           type="button"
@@ -52,19 +64,25 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
             onEdit(item);
             setShowActions(false);
           }}
-          className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 transition-transform hover:scale-105 active:scale-95"
+          style={{
+            height: "100%",
+            width: "60px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#FFE500",
+            color: "#000",
+            border: "none",
+            borderLeft: "3px solid #000",
+            cursor: "pointer",
+            fontFamily: font,
+            fontSize: "0.625rem",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            borderRadius: 0,
+          }}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-          </svg>
+          EDIT
         </button>
         <button
           type="button"
@@ -72,71 +90,176 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
             onDelete(item._id);
             setShowActions(false);
           }}
-          className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100 text-red-600 transition-transform hover:scale-105 active:scale-95"
+          style={{
+            height: "100%",
+            width: "60px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#000",
+            color: "#FFF",
+            border: "none",
+            borderLeft: "3px solid #000",
+            cursor: "pointer",
+            fontFamily: font,
+            fontSize: "0.625rem",
+            fontWeight: 700,
+            letterSpacing: "0.1em",
+            borderRadius: 0,
+          }}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <polyline points="3 6 5 6 21 6" />
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-          </svg>
+          DEL
         </button>
       </div>
 
-      {/* Main card */}
+      {/* Main row */}
       <div
-        className="relative cursor-pointer bg-white transition-all duration-200 active:bg-zinc-50"
         style={{
+          position: "relative",
+          display: "grid",
+          gridTemplateColumns: "60px 1fr 100px 80px",
+          borderBottom: "1px solid #000",
+          backgroundColor: isHovered ? "#000" : "#FFF",
+          color: isHovered ? "#FFF" : "#000",
+          cursor: "pointer",
+          fontFamily: font,
           transform: `translateX(-${swipeOffset}px)`,
+          transition: isDragging ? "none" : "all 100ms",
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onClick={() => (showActions ? setShowActions(false) : onEdit(item))}
-        onKeyDown={(e) => e.key === "Enter" && (showActions ? setShowActions(false) : onEdit(item))}
+        onKeyDown={(e) =>
+          e.key === "Enter" &&
+          (showActions ? setShowActions(false) : onEdit(item))
+        }
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         role="button"
         tabIndex={0}
       >
-        <div className="flex items-start gap-4 p-4">
-          {/* Left side - quantity */}
-          <div className="flex flex-col items-center justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 text-lg font-semibold text-zinc-600">
-              {item.quantity > 99 ? (
-                <span className="text-sm">99+</span>
-              ) : (
-                <span>{item.quantity}</span>
-              )}
-            </div>
-          </div>
+        {/* Quantity */}
+        <div
+          style={{
+            padding: "0.75rem 0.5rem",
+            borderRight: "1px solid " + (isHovered ? "#FFF" : "#000"),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: 800,
+            fontSize: "1rem",
+            transition: "border-color 100ms",
+          }}
+        >
+          {item.quantity > 99 ? "99+" : item.quantity}
+        </div>
 
-          {/* Content */}
-          <div className="flex flex-1 flex-col gap-1.5 overflow-hidden">
-            <div className="flex items-center gap-2">
-              <h3 className="truncate text-base font-medium text-zinc-900">
-                {item.name}
-              </h3>
-              {item.isFragile && (
-                <span className="shrink-0 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-600">
-                  Fragile
-                </span>
-              )}
-            </div>
-            {item.description && (
-              <p className="truncate text-sm text-zinc-500">
-                {item.description}
-              </p>
-            )}
-            {item.category && (
-              <span className="w-fit rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-400">
-                {item.category}
-              </span>
-            )}
+        {/* Item name + description */}
+        <div
+          style={{
+            padding: "0.75rem 0.5rem",
+            borderRight: "1px solid " + (isHovered ? "#FFF" : "#000"),
+            overflow: "hidden",
+            transition: "border-color 100ms",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.8125rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {item.name}
           </div>
+          {item.description && (
+            <div
+              style={{
+                fontSize: "0.625rem",
+                marginTop: "0.125rem",
+                opacity: 0.6,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {item.description}
+            </div>
+          )}
+        </div>
+
+        {/* Category */}
+        <div
+          style={{
+            padding: "0.75rem 0.5rem",
+            borderRight: "1px solid " + (isHovered ? "#FFF" : "#000"),
+            display: "flex",
+            alignItems: "center",
+            fontSize: "0.625rem",
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            transition: "border-color 100ms",
+          }}
+        >
+          {item.category ? (
+            <span
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {item.category}
+            </span>
+          ) : (
+            <span style={{ opacity: 0.3 }}>---</span>
+          )}
+        </div>
+
+        {/* Status / Fragile */}
+        <div
+          style={{
+            padding: "0.75rem 0.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "border-color 100ms",
+          }}
+        >
+          {item.isFragile ? (
+            <span
+              style={{
+                backgroundColor: "#FFE500",
+                color: "#000",
+                padding: "0.125rem 0.375rem",
+                fontSize: "0.5625rem",
+                fontWeight: 800,
+                letterSpacing: "0.1em",
+                fontFamily: font,
+                border: "2px solid #000",
+              }}
+            >
+              FRAGILE
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: "0.5625rem",
+                fontWeight: 600,
+                letterSpacing: "0.1em",
+                opacity: 0.3,
+              }}
+            >
+              STD
+            </span>
+          )}
         </div>
       </div>
     </div>
