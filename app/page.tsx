@@ -83,24 +83,26 @@ export default function Home() {
             INVENTORY MANAGEMENT SYSTEM
           </p>
 
-          <div
-            style={{
-              marginTop: "3rem",
-              border: "3px solid #FFE500",
-              backgroundColor: "#FFE500",
-              color: "#000",
-              padding: "1rem 3rem",
-              fontSize: "1rem",
-              fontWeight: 700,
-              fontFamily: '"JetBrains Mono", "Courier New", monospace',
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              cursor: "pointer",
-              borderRadius: 0,
-            }}
-          >
-            <SignInButton mode="modal" />
-          </div>
+          <SignInButton mode="modal">
+            <button
+              style={{
+                marginTop: "3rem",
+                border: "3px solid #FFE500",
+                backgroundColor: "#FFE500",
+                color: "#000",
+                padding: "1rem 3rem",
+                fontSize: "1rem",
+                fontWeight: 700,
+                fontFamily: '"JetBrains Mono", "Courier New", monospace',
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                borderRadius: 0,
+              }}
+            >
+              Sign In
+            </button>
+          </SignInButton>
 
           <p
             style={{
