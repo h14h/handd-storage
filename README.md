@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Authentication
+
+This app uses [Clerk](https://clerk.com/) for authentication and [Convex](https://convex.dev/) for data storage.
+
+### Setup
+
+1. Create a Clerk application at [dashboard.clerk.com](https://dashboard.clerk.com/).
+2. Create a JWT Template in Clerk named `convex` (in JWT Templates > New Template > Convex).
+3. Copy the Issuer URL from the JWT template.
+4. Add the Issuer URL to `convex/auth.config.ts`.
+5. Add the following to `.env.local`:
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+```
+
+6. Run `npx convex dev` to deploy changes.
+7. Run `npm run dev` to start the app.
+
 ## Getting Started
 
 First, run the development server:

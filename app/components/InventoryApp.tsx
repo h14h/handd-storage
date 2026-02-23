@@ -1,5 +1,6 @@
 "use client";
 
+import { UserButton } from "@clerk/nextjs";
 import { useState, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -81,17 +82,20 @@ export function InventoryApp() {
                 {allItems?.length ?? 0} items
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setEditingItem(null);
-                setIsItemModalOpen(true);
-              }}
-              className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 active:bg-zinc-700"
-            >
-              <PlusIcon size={16} />
-              <span className="hidden sm:inline">New Item</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <UserButton />
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingItem(null);
+                  setIsItemModalOpen(true);
+                }}
+                className="flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800 active:bg-zinc-700"
+              >
+                <PlusIcon size={16} />
+                <span className="hidden sm:inline">New Item</span>
+              </button>
+            </div>
           </div>
 
           {/* Search */}
