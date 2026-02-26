@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 
 const font = '"JetBrains Mono", "Courier New", monospace';
@@ -16,28 +16,40 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [canHover, setCanHover] = useState(false);
   const startX = useRef(0);
+  const startOffset = useRef(0);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover)");
+    setCanHover(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setCanHover(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
+    startOffset.current = showActions ? 120 : 0;
     setIsDragging(true);
+    setIsHovered(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const currentX = e.touches[0].clientX;
     const diff = startX.current - currentX;
-    if (diff > 0) {
-      setSwipeOffset(Math.min(diff, 120));
-    }
+    const newOffset = startOffset.current + diff;
+    setSwipeOffset(Math.max(0, Math.min(newOffset, 120)));
   };
 
   const handleTouchEnd = () => {
     setIsDragging(false);
     if (swipeOffset > 60) {
       setShowActions(true);
-      setSwipeOffset(0);
+      setSwipeOffset(120);
     } else {
+      setShowActions(false);
       setSwipeOffset(0);
     }
   };
@@ -54,7 +66,8 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
           display: "flex",
           alignItems: "center",
           gap: 0,
-          opacity: showActions ? 1 : 0,
+          opacity: swipeOffset > 0 ? 1 : 0,
+          pointerEvents: swipeOffset > 0 ? "auto" : "none",
           transition: "opacity 100ms",
         }}
       >
@@ -124,18 +137,31 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
           cursor: "pointer",
           fontFamily: font,
           transform: `translateX(-${swipeOffset}px)`,
-          transition: isDragging ? "none" : "all 100ms",
+          transition: isDragging ? "none" : "transform 200ms ease-out",
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        onClick={() => (showActions ? setShowActions(false) : onEdit(item))}
-        onKeyDown={(e) =>
-          e.key === "Enter" &&
-          (showActions ? setShowActions(false) : onEdit(item))
-        }
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onClick={() => {
+          if (showActions) {
+            setShowActions(false);
+            setSwipeOffset(0);
+          } else {
+            onEdit(item);
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            if (showActions) {
+              setShowActions(false);
+              setSwipeOffset(0);
+            } else {
+              onEdit(item);
+            }
+          }
+        }}
+        onMouseEnter={() => canHover && setIsHovered(true)}
+        onMouseLeave={() => canHover && setIsHovered(false)}
         role="button"
         tabIndex={0}
       >
